@@ -8,7 +8,7 @@ module MultiLogger
 
       raise "'#{name}' is reserved in #{rails_logger_class} and can not be used as a log accessor name." if rails_logger_class.method_defined?(name)
 
-      logger = Logger.new(*extract_options(name, options))
+     logger = Logger.new(*extract_options(name, options))
       rails_logger_class.class_eval do
         define_method name.to_sym do
           logger
@@ -34,7 +34,9 @@ module MultiLogger
     end
 
     def get_rails_logger_class
-      if defined?(ActiveSupport::BufferedLogger)
+      if defined?(ActiveSupport::TaggedLogging)
+        ActiveSupport::TaggedLogging
+      elsif defined?(ActiveSupport::BufferedLogger)
         ActiveSupport::BufferedLogger
       elsif defined?(ActiveSupport::Logger)
         ActiveSupport::Logger
